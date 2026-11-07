@@ -14,7 +14,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&family=Nunito+Sans:wght@300;400;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Nunito+Sans:wght@300;400;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;1,6..72,500&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: barra lateral fixa no desktop, barra de abas inferior no celular; conteúdo em listas densas, estados por cor semântica. */
 :root{
@@ -45,7 +45,7 @@ button{cursor:pointer}
 .topbar{display:flex;align-items:center;gap:12px;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:10px;min-width:0}
 .msym{display:block;flex:none;width:34px;height:34px}
-.brand b{font-family:"Outfit",var(--f-body);font-weight:800;font-size:30px;letter-spacing:-.05em;line-height:1;color:var(--bee)}
+.brand b{font-family:"Plus Jakarta Sans",var(--f-body);font-weight:600;font-size:30px;letter-spacing:-.03em;line-height:1;color:var(--bee)}
 .brand b .y{color:var(--accent)}
 .brand>span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top-actions{display:flex;gap:6px}
@@ -594,7 +594,7 @@ body::before{background:var(--side)}
  .side .sbrand{display:flex;align-items:center;height:76px;padding:0 10px;margin:0 -14px 10px;padding-left:24px;border-bottom:1px solid var(--side-line);text-decoration:none}
  .side .sbrand{gap:11px;flex:none}
  .side .sbrand .msym{width:44px;height:44px}
- .side .sbrand b{font-family:"Outfit",var(--f-body);font-weight:800;font-size:44px;letter-spacing:-.05em;line-height:1;color:var(--side-strong)}
+ .side .sbrand b{font-family:"Plus Jakarta Sans",var(--f-body);font-weight:600;font-size:44px;letter-spacing:-.03em;line-height:1;color:var(--side-strong)}
  .side .sbrand b .y{color:var(--accent)}
  .side .sbrand small{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--side-ink);margin:2px 0 0 14px;font-weight:700}
  .side .sgroup{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--side-strong);opacity:.9;padding:14px 12px 6px}
@@ -676,6 +676,7 @@ h2.sec{font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);font
  .shell{grid-template-columns:268px minmax(0,1fr)}
  .side{top:14px;height:calc(100vh - 28px);margin:14px 0 14px 14px;border-radius:24px;padding:0 12px 12px;box-shadow:0 8px 24px rgba(16,24,40,.12);overflow:hidden auto;z-index:30}
  .side .sbrand{margin:0 -12px 6px;padding-left:22px;border-bottom:0;height:84px}
+ .side .sbrand{justify-content:center;padding-left:0;padding-right:0}
  .side .sgroup{font-size:12px;font-weight:600;letter-spacing:.02em;text-transform:none;color:var(--side-ink);opacity:.7;padding:16px 14px 6px}
  .side a{border-radius:14px;padding:10px 14px;font-weight:450}
  .side a:hover{background:rgba(255,255,255,.06)}
@@ -718,11 +719,11 @@ body.gated .shell,body.gated .tabbar,body.gated .toastwrap{display:none!importan
 .gbrand{display:flex;align-items:center;gap:10px;margin-bottom:18px}
 .gwave{position:absolute;left:0;width:100%;pointer-events:none}.gwave.top{top:0;height:110px}.gwave.bot{bottom:0;height:120px}
 .gbrand .msym{width:52px;height:52px}
-.gbrand b{font-family:"Outfit",var(--f-body);font-weight:800;font-size:50px;letter-spacing:-.05em;line-height:1;color:#fff}
+.gbrand b{font-family:"Plus Jakarta Sans",var(--f-body);font-weight:600;font-size:50px;letter-spacing:-.03em;line-height:1;color:#fff}
 .gbrand b .y{color:var(--accent)}
 .gwel{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
 .gwel>span{font-size:15px;color:#C9D0DE}
-.gwel h1{margin:0;font-family:"Outfit",var(--f-body);font-weight:700;font-size:40px;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+.gwel h1{margin:0;font-family:"Plus Jakarta Sans",var(--f-body);font-weight:700;font-size:40px;letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
 .gbar{display:block;width:44px;height:4px;border-radius:4px;background:var(--accent);margin:6px 0}
 .gwel p{margin:0;max-width:300px;font-size:14px;line-height:1.55;color:#AEB6C7}
 .gform{padding:56px 52px;display:flex;flex-direction:column;justify-content:center;gap:16px;min-width:0}
