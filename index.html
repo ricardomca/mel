@@ -1112,20 +1112,20 @@ function avaliarGate(){const antes=S.gate;
  schedule()}
 async function setAcesso(patchMembros,msg){if(!S.db)return false;const membros={...((S.acesso&&S.acesso.membros)||{})};for(const [k,v] of Object.entries(patchMembros)){if(v===null)delete membros[k];else membros[k]=v}
  try{await S.db.doc('config/acessos').set({membros,atualizadoEm:now()});S.acesso={...(S.acesso||{}),membros};if(msg)toast(msg);return true}catch(e){onErr(e);return false}}
-async function aprovarAcesso(id,papel){const p=(S.pedidos||[]).find(x=>x.id===id)||{};
+async function aprovarAcesso(id,papel){if(id===S.meId)return;const p=(S.pedidos||[]).find(x=>x.id===id)||{};
  if(!await setAcesso({[id]:{papel,nome:p.nome||'',oab:p.oab||'',uf:p.uf||'',aprovadoEm:now(),por:S.meId||null}}))return;
  try{await S.db.doc('acessos/'+id).update({status:'aprovada',papel,decididoEm:now(),por:S.meId||null})}catch(e){}
  if(!(S.equipe||[]).includes(id))await setEquipe([...(S.equipe||[]),id]);
  toast(`${p.nome||'Acesso'} aprovado como ${PAPEIS[papel]}. Na próxima vez que entrar, a pessoa já vê os dados.`);refreshEquipe()}
 async function recusarAcesso(id){try{await S.db.doc('acessos/'+id).update({status:'recusada',decididoEm:now(),por:S.meId||null});toast('Solicitação recusada')}catch(e){onErr(e)}refreshEquipe()}
-function acessosHtml(){if(!S.isAdmin)return'';const pend=(S.pedidos||[]).filter(p=>p.status==='pendente').sort((a,b)=>(a.em||'').localeCompare(b.em||''));
+function acessosHtml(){if(!S.isAdmin)return'';const pend=(S.pedidos||[]).filter(p=>p.status==='pendente'&&p.id!==S.meId).sort((a,b)=>(a.em||'').localeCompare(b.em||''));
  const mem=Object.entries((S.acesso&&S.acesso.membros)||{});
  return`<section><h2 class="sec">Solicitações de acesso <span class="count">${pend.length}</span></h2>
   ${pend.length?`<div class="people">${pend.map(p=>`<div class="reqrow"><div style="min-width:0"><b>${esc(p.nome||'Sem nome')}</b><div class="s">${p.oab?`OAB ${esc(p.oab)}/${esc(p.uf||'')} · `:''}${esc(p.telefone||'')} · ${esc(fmtQuando(p.em))}</div>${p.mensagem?`<div class="s">“${esc(p.mensagem)}”</div>`:''}${p.conta&&p.conta!==p.nome?`<div class="s">Conta Claude: ${esc(p.conta)}</div>`:''}</div>
    <div class="reqacts"><select id="papel-${esc(p.id)}" aria-label="Papel">${opt('associado',PAPEIS.associado,'associado')}${opt('socio',PAPEIS.socio,'')}</select><button class="btn primary" data-act="ac-aprovar" data-id="${esc(p.id)}">Aprovar</button><button class="btn ghost" data-act="ac-recusar" data-id="${esc(p.id)}">Recusar</button></div></div>`).join('')}</div>`:'<p class="muted" style="margin:0;font-size:13.5px">Nenhuma solicitação pendente.</p>'}
   <p class="muted" style="margin:8px 0 0;font-size:12.5px">O sócio-administrador vê tudo, inclusive Honorários. O advogado associado usa processos, prazos, publicações, agenda e modelos.</p></section>
  <section><h2 class="sec">Quem tem acesso <span class="count">${mem.length+(S.isOwner&&!papelDe(S.meId)?1:0)}</span></h2><div class="people">
-  ${mem.map(([id,m])=>`<div class="person">${avatar(id,32)}<span class="nm">${esc((S.profiles[id]&&S.profiles[id].name)||m.nome||'Pessoa')}${id===S.meId?' <span class="muted">(você)</span>':''}<small class="muted" style="display:block;font-size:12px">${PAPEIS[m.papel]||m.papel}</small></span>${id!==S.meId?`<select data-papel-id="${esc(id)}" aria-label="Papel de ${esc(m.nome||'')}">${Object.entries(PAPEIS).map(([k,l])=>opt(k,l,m.papel)).join('')}</select><button class="btn ghost" data-act="ac-remover" data-id="${esc(id)}">Remover</button>`:''}</div>`).join('')}</div></section>`}
+  ${mem.map(([id,m])=>`<div class="person">${avatar(id,32)}<span class="nm">${esc((S.profiles[id]&&S.profiles[id].name)||m.nome||'Pessoa')}${id===S.meId?' <span class="muted">(você)</span>':''}<small class="muted" style="display:block;font-size:12px">${id===S.meId&&S.isOwner?'Sócio-administrador · responsável pela Mel':(PAPEIS[m.papel]||m.papel)}</small></span>${id!==S.meId?`<select data-papel-id="${esc(id)}" aria-label="Papel de ${esc(m.nome||'')}">${Object.entries(PAPEIS).map(([k,l])=>opt(k,l,m.papel)).join('')}</select><button class="btn ghost" data-act="ac-remover" data-id="${esc(id)}">Remover</button>`:''}</div>`).join('')}</div></section>`}
 function draw(){
  if(S.gate!=='ok'){renderGate();return}
  {const g=$('#gate');if(g){g.remove();document.body.classList.remove('gated')}}
@@ -2364,10 +2364,13 @@ async function init(){route();draw();
  if(!db){S.offline=true;avaliarGate();return}
  S.db=db;
  db.doc('publico/login').onSnapshot(s=>{S.publico=(s.exists&&s.data())||{};if(S.gate!=='ok')schedule()},()=>{});
- if(S.meId)db.doc('acessos/'+S.meId).onSnapshot(s=>{S.meuPedido=s.exists?s.data():null;if(S.gate!=='ok')schedule()},()=>{});
+ if(S.meId)db.doc('acessos/'+S.meId).onSnapshot(s=>{S.meuPedido=s.exists?s.data():null;
+   if(S.isOwner&&S.meuPedido&&(S.meuPedido.status!=='aprovada'||S.meuPedido.papel!=='socio')&&!S.fechouPedidoDono){S.fechouPedidoDono=true;db.doc('acessos/'+S.meId).update({status:'aprovada',papel:'socio',decididoEm:now(),por:S.meId}).catch(()=>{})}
+   if(S.gate!=='ok')schedule()},()=>{});
  const gt=setTimeout(()=>{if(!S.acessoLido){S.acessoLido=true;avaliarGate()}},8000);
  db.doc('config/acessos').onSnapshot(s=>{S.acesso=s.exists?s.data():null;if(s.exists||!s.metadata.fromCache){S.acessoLido=true;clearTimeout(gt)}
    if(S.isOwner&&S.acessoLido&&!s.exists&&!S.migrouAcesso){S.migrouAcesso=true;const m={};if(S.meId)m[S.meId]={papel:'socio',nome:(S.meProfile&&S.meProfile.name)||'',aprovadoEm:now()};setAcesso(m)}
+   else if(S.isOwner&&S.meId&&s.exists&&!S.corrigiuDono){const mm=(S.acesso.membros||{})[S.meId];if(!mm||mm.papel!=='socio'){S.corrigiuDono=true;setAcesso({[S.meId]:{...(mm||{}),papel:'socio',nome:(mm&&mm.nome)||(S.meProfile&&S.meProfile.name)||'',aprovadoEm:(mm&&mm.aprovadoEm)||now()}})}}
    avaliarGate()},()=>{S.acessoLido=true;avaliarGate()});
  S.iniciarApp=()=>{if(S.appIniciado)return;S.appIniciado=true;iniciarApp(db)};avaliarGate()}
 function iniciarApp(db){const timer=setTimeout(()=>{S.slow=true;schedule()},10000);
