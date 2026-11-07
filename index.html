@@ -707,18 +707,18 @@ h2.sec{font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);font
  body.side-auto.side-open .side{height:calc(100vh - 28px);margin-top:14px;top:14px}
  body.side-auto .side.medindo{height:auto!important;align-self:start!important}
  body.side-auto .side.medindo,body.side-auto .side.medindo *{transition:none!important}
- body.side-auto .side .sbrand{height:66px;transition:height .2s cubic-bezier(.3,.75,.25,1)}
+ body.side-auto .side .sbrand{height:76px;transition:height .2s cubic-bezier(.3,.75,.25,1)}
  body.side-auto.side-open .side .sbrand{height:84px}
  body.side-auto .side .foot{position:relative;padding-top:16px;transition:padding-top .2s cubic-bezier(.3,.75,.25,1)}
  body.side-auto .side .foot::before{content:"";position:absolute;left:28px;width:18px;top:7px;height:1px;border-radius:1px;background:var(--side-ink);opacity:.35;transition:opacity .15s ease}
  body.side-auto.side-open .side .foot{padding-top:8px}
  body.side-auto.side-open .side .foot::before{opacity:0}
  body.side-auto .side .sbrand{margin:0 -10px 6px;padding:0;gap:0;justify-content:center}
- body.side-auto .side .sbrand .msym{width:36px;height:36px;transition:width .2s cubic-bezier(.3,.75,.25,1),height .2s cubic-bezier(.3,.75,.25,1)}
- body.side-auto.side-open .side .sbrand .msym{width:44px;height:44px}
+ body.side-auto .side .sbrand .msym{width:36px;height:36px;transform:translateY(-9px);transition:width .2s cubic-bezier(.3,.75,.25,1),height .2s cubic-bezier(.3,.75,.25,1),transform .2s cubic-bezier(.3,.75,.25,1)}
+ body.side-auto.side-open .side .sbrand .msym{width:44px;height:44px;transform:none}
  body.side-auto .side .sbrand b{max-width:0;margin-left:0;opacity:0;overflow:hidden;white-space:nowrap;transition:max-width .2s cubic-bezier(.3,.75,.25,1),margin-left .2s cubic-bezier(.3,.75,.25,1),opacity .1s ease}
  body.side-auto.side-open .side .sbrand b{max-width:140px;margin-left:11px;opacity:1;transition:max-width .2s cubic-bezier(.3,.75,.25,1),margin-left .2s cubic-bezier(.3,.75,.25,1),opacity .16s ease .05s}
- body.side-auto .side .sbrand .beta{margin-left:6px;font-size:7.5px;letter-spacing:.14em;padding:2px 5px 2px 6px;transform:none;transition:margin-left .2s cubic-bezier(.3,.75,.25,1),font-size .2s cubic-bezier(.3,.75,.25,1),letter-spacing .2s cubic-bezier(.3,.75,.25,1),padding .2s cubic-bezier(.3,.75,.25,1),transform .2s cubic-bezier(.3,.75,.25,1)}
+ body.side-auto .side .sbrand .beta{margin-left:-37px;font-size:7.5px;letter-spacing:.14em;padding:2px 5px 2px 6px;transform:translate(0,21px);transition:margin-left .2s cubic-bezier(.3,.75,.25,1),font-size .2s cubic-bezier(.3,.75,.25,1),letter-spacing .2s cubic-bezier(.3,.75,.25,1),padding .2s cubic-bezier(.3,.75,.25,1),transform .2s cubic-bezier(.3,.75,.25,1)}
  body.side-auto.side-open .side .sbrand .beta{margin-left:7px;font-size:9px;letter-spacing:.2em;padding:3px 7px 3px 8px;transform:translateY(-13px)}
  body.side-auto .side .grpgap{display:none}
  body.side-auto .side .sgroup{position:relative;white-space:nowrap;color:transparent;box-sizing:border-box;height:17px;padding-top:0;padding-bottom:0;display:flex;align-items:flex-end;transition:color .1s ease,height .2s cubic-bezier(.3,.75,.25,1),padding-bottom .2s cubic-bezier(.3,.75,.25,1)}
