@@ -1,0 +1,50 @@
+rules_version = '2';
+// Regras de segurança da Mel. Só quem foi aprovado lê e grava dados; honorários e propostas, só sócios.
+// Troque o e-mail abaixo se o dono da Mel usar outro e-mail (precisa ser igual ao de firebase-config.js).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function logado() { return request.auth != null; }
+    function dono() {
+      return logado() && request.auth.token.email != null
+        && request.auth.token.email.lower() == 'ricardomca@outlook.com'
+        && request.auth.token.email_verified == true;
+    }
+    function caminhoAcessos() { return /databases/$(database)/documents/config/acessos; }
+    function membro() {
+      return dono() || (logado() && exists(caminhoAcessos())
+        && request.auth.uid in get(caminhoAcessos()).data.membros);
+    }
+    function socio() {
+      return dono() || (membro() && get(caminhoAcessos()).data.membros[request.auth.uid].papel == 'socio');
+    }
+
+    // Configurações do escritório, lista de quem tem acesso e equipe
+    match /config/{doc} {
+      allow read: if membro();
+      allow write: if socio();
+    }
+    // Dados que a tela de entrada mostra a qualquer pessoa (só o WhatsApp do escritório)
+    match /publico/{doc} {
+      allow read: if true;
+      allow write: if socio();
+    }
+    // Pedidos de acesso: cada pessoa cria e corrige o próprio pedido, sem poder se aprovar
+    match /acessos/{uid} {
+      allow read: if (logado() && request.auth.uid == uid) || socio();
+      allow create: if logado() && request.auth.uid == uid && request.resource.data.status == 'pendente';
+      allow update: if (logado() && request.auth.uid == uid && request.resource.data.status == 'pendente'
+                        && resource.data.status != 'aprovada') || socio();
+      allow delete: if socio();
+    }
+    // Financeiro: só sócios
+    match /contratos/{id} { allow read, write: if socio(); }
+    match /propostas/{id} { allow read, write: if socio(); }
+    // Arquivos dos modelos (Word)
+    match /arquivos/{id} { allow read, write: if membro(); }
+    // Dados do dia a dia: toda a equipe aprovada
+    match /{col}/{id} {
+      allow read, write: if membro()
+        && col in ['processos', 'prazos', 'eventos', 'tarefas', 'publicacoes', 'conferencias', 'modelos', 'clientes'];
+    }
+  }
+}
