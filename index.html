@@ -735,6 +735,8 @@ h2.sec{font-size:14px;text-transform:none;letter-spacing:0;color:var(--ink);font
  .sidetoggle .pin{display:none}
  body.side-auto .sidetoggle .pin{display:block}
  body.side-auto .sidetoggle .chev{display:none}
+ body.side-auto .side .foot .sidetoggle{max-height:0;padding-top:0;padding-bottom:0;opacity:0;overflow:hidden;visibility:hidden;pointer-events:none;transition:max-height .2s cubic-bezier(.3,.75,.25,1),padding .2s cubic-bezier(.3,.75,.25,1),opacity .1s ease,visibility 0s linear .2s}
+ body.side-auto.side-open .side .foot .sidetoggle{max-height:44px;padding-top:11px;padding-bottom:11px;opacity:1;visibility:visible;pointer-events:auto;transition:max-height .2s cubic-bezier(.3,.75,.25,1),padding .2s cubic-bezier(.3,.75,.25,1),opacity .16s ease .05s,visibility 0s}
  @media (prefers-reduced-motion:reduce){body.side-auto .shell,body.side-auto .side,body.side-auto .side *{transition:none!important}}
 }
 /* celular: barra flutuante em pílula, só ícones */
