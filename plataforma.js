@@ -84,7 +84,7 @@
       const senha = (nm, ac, extra) => `<span class="gin">${ic.lock}<input id="mlSenha" name="${nm}" type="password" autocomplete="${ac}" ${extra || ''} required><button type="button" class="geye" data-ml="olho" aria-label="Mostrar senha" aria-pressed="false">${ic.eye}</button></span>`;
       const nota = motivoSaida === 'sessao' ? 'Por segurança, a Mel agora pede o login a cada vez que o navegador é aberto. Entre de novo para continuar.' : '';
       return `<h2>${aba === 'entrar' ? 'Entrar na Mel' : 'Pedir cadastro'}</h2>
-      <p class="gsub">${aba === 'entrar' ? 'Use o e-mail cadastrado no escritório.' : 'Crie a sua conta. O acesso é liberado depois da aprovação do escritório.'}</p>
+      ${aba === 'criar' ? '<p class="gsub">Crie a sua conta. O acesso é liberado depois da aprovação do escritório.</p>' : ''}
       ${nota && aba === 'entrar' ? `<p class="gnota" role="status">${esc(nota)}</p>` : ''}
       <div class="gtabs" role="tablist"><button type="button" role="tab" aria-selected="${aba === 'entrar'}" data-ml="entrar">Entrar</button><button type="button" role="tab" aria-selected="${aba === 'criar'}" data-ml="criar">Pedir cadastro</button></div>
       ${aba === 'entrar' ? `<form class="gfields" id="mlForm" novalidate>

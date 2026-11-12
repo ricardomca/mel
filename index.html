@@ -8,7 +8,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase-config.js?v=637527ce"></script>
-<script src="plataforma.js?v=68e3ec61"></script>
+<script src="plataforma.js?v=f99b24ea"></script>
 </head><body>
 <title>Mel</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -757,7 +757,7 @@ body.gated{background:#0F141E}
 #gate::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100' fill='none' stroke='%23F2B705' stroke-width='1'/%3E%3C/svg%3E");background-size:56px 100px;opacity:.09;-webkit-mask:radial-gradient(700px 480px at 50% 26%,#000,transparent 75%);mask:radial-gradient(700px 480px at 50% 26%,#000,transparent 75%);pointer-events:none}
 .gdec{position:absolute;width:420px;height:420px;opacity:.5;pointer-events:none} .gdec.d1{left:-140px;top:-120px} .gdec.d2{right:-160px;bottom:-150px;transform:rotate(30deg)}
 .gwrap{position:relative;width:100%;max-width:430px;margin:auto 0;display:flex;flex-direction:column;align-items:center}
-.gbrand{display:flex;flex-direction:column;align-items:center;gap:12px}
+.gbrand{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:30px}
 .gbrand .msym{width:76px;height:76px;filter:drop-shadow(0 10px 30px rgba(242,183,5,.45))}
 .gbrand b{font-family:"Plus Jakarta Sans",var(--f-body);font-weight:600;font-size:52px;letter-spacing:-.03em;line-height:1;color:#fff} .gbrand b .y{color:var(--accent)}
 #gate .gbrand .beta{margin:-2px 0 0;font-size:9px;padding:3px 7px 3px 8px}
@@ -810,7 +810,7 @@ body.gated{background:#0F141E}
 @media (max-width:700px){
  #gate{padding-top:36px} .gwrap{margin:0}
  .gbrand .msym{width:60px;height:60px} .gbrand b{font-size:42px}
- .gtag{margin:10px 0 22px;font-size:14.5px}
+ .gbrand{margin-bottom:24px}
  .gcard{padding:26px 20px 20px;border-radius:24px}
  .gdec{width:300px;height:300px}
 }
@@ -1146,7 +1146,7 @@ function gateForm(){const st=S.gate;const nome=(S.meProfile&&S.meProfile.name)||
 function renderGate(force){let g=$('#gate');if(!g){g=document.createElement('div');g.id='gate';document.body.appendChild(g)}
  document.body.classList.add('gated');
  const sig=[S.gate,S.meuPedido&&S.meuPedido.status,S.meuPedido&&S.meuPedido.em,S.gEdit,S.gWhats,S.publico&&S.publico.whatsapp,S.meProfile&&S.meProfile.name].join('|');if(!force&&g.dataset.sig===sig)return;g.dataset.sig=sig;
- g.innerHTML=`<svg class="gdec d1" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 90,27 90,73 50,96 10,73 10,27" fill="none" stroke="rgba(242,183,5,.35)" stroke-width=".4"/><polygon points="50,18 78,34 78,66 50,82 22,66 22,34" fill="none" stroke="rgba(242,183,5,.2)" stroke-width=".4"/></svg><svg class="gdec d2" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 90,27 90,73 50,96 10,73 10,27" fill="none" stroke="rgba(242,183,5,.35)" stroke-width=".4"/><polygon points="50,18 78,34 78,66 50,82 22,66 22,34" fill="none" stroke="rgba(242,183,5,.2)" stroke-width=".4"/></svg><div class="gwrap"><div class="gbrand">${MEL_SYM}<b><span>M</span><span class="y">e</span><span>l</span></b><em class="beta" title="Versão inicial, em testes">Beta</em></div><p class="gtag">O escritório inteiro, num só lugar.</p>
+ g.innerHTML=`<svg class="gdec d1" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 90,27 90,73 50,96 10,73 10,27" fill="none" stroke="rgba(242,183,5,.35)" stroke-width=".4"/><polygon points="50,18 78,34 78,66 50,82 22,66 22,34" fill="none" stroke="rgba(242,183,5,.2)" stroke-width=".4"/></svg><svg class="gdec d2" viewBox="0 0 100 100" aria-hidden="true"><polygon points="50,4 90,27 90,73 50,96 10,73 10,27" fill="none" stroke="rgba(242,183,5,.35)" stroke-width=".4"/><polygon points="50,18 78,34 78,66 50,82 22,66 22,34" fill="none" stroke="rgba(242,183,5,.2)" stroke-width=".4"/></svg><div class="gwrap"><div class="gbrand">${MEL_SYM}<b><span>M</span><span class="y">e</span><span>l</span></b><em class="beta" title="Versão inicial, em testes">Beta</em></div>
   <section class="gcard gform">${gateForm()}</section><p class="gfoot">Acesso restrito à equipe do escritório</p></div>`;
  const f=$('#gForm');if(f)f.addEventListener('submit',e=>{e.preventDefault();enviarPedido(f)});
  if(S.gate==='signedout'&&window.melLogin)window.melLogin.wire();
