@@ -75,31 +75,38 @@
   window.melSair = async () => { ss.del('mel-sessao'); try { await auth.signOut(); } catch (e) {} location.reload(); };
   window.melLogin = {
     html(){ const ufs = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SE SP TO'.split(' ');
+      const ic = {
+        mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M4 7l8 6 8-6"/></svg>',
+        lock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>',
+        eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+        arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+        shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7.5 3v5.5c0 4.6-3.2 8.2-7.5 9.5-4.3-1.3-7.5-4.9-7.5-9.5V6z"/></svg>' };
+      const senha = (nm, ac, extra) => `<span class="gin">${ic.lock}<input id="mlSenha" name="${nm}" type="password" autocomplete="${ac}" ${extra || ''} required><button type="button" class="geye" data-ml="olho" aria-label="Mostrar senha" aria-pressed="false">${ic.eye}</button></span>`;
       const nota = motivoSaida === 'sessao' ? 'Por segurança, a Mel agora pede o login a cada vez que o navegador é aberto. Entre de novo para continuar.' : '';
-      return `<h2>${aba === 'entrar' ? 'Entrar na Mel' : 'Criar conta'}</h2>
-      ${nota && aba === 'entrar' ? `<p class="gnota" role="status" style="margin:0 0 14px;padding:10px 12px;border-radius:12px;background:#FFF6D6;color:#5C4500;font-size:13.5px;line-height:1.4">${esc(nota)}</p>` : ''}
+      return `<h2>${aba === 'entrar' ? 'Entrar na Mel' : 'Pedir cadastro'}</h2>
+      <p class="gsub">${aba === 'entrar' ? 'Use o e-mail cadastrado no escritório.' : 'Crie a sua conta. O acesso é liberado depois da aprovação do escritório.'}</p>
+      ${nota && aba === 'entrar' ? `<p class="gnota" role="status">${esc(nota)}</p>` : ''}
       <div class="gtabs" role="tablist"><button type="button" role="tab" aria-selected="${aba === 'entrar'}" data-ml="entrar">Entrar</button><button type="button" role="tab" aria-selected="${aba === 'criar'}" data-ml="criar">Pedir cadastro</button></div>
       ${aba === 'entrar' ? `<form class="gfields" id="mlForm" novalidate>
-        <label class="gf"><span>E-mail</span><input name="email" type="email" autocomplete="username" required></label>
-        <label class="gf"><span>Senha</span><input name="senha" type="password" autocomplete="current-password" required></label>
+        <label class="gf"><span>E-mail</span><span class="gin">${ic.mail}<input name="email" type="email" autocomplete="username" placeholder="seu.nome@escritorio.adv.br" required></span></label>
+        <div class="gf"><div class="glrow"><label for="mlSenha">Senha</label><button class="glink" type="button" data-ml="reset">Esqueci minha senha</button></div>${senha('senha', 'current-password')}</div>
         <p class="gerr" id="mlErr" role="alert"></p>
-        <button class="gbtn" type="submit">Entrar</button>
-        <button class="glink" type="button" data-ml="reset">Esqueci minha senha</button>
-        <p class="gsub" style="margin:4px 0 0;font-size:12.5px">Por segurança, a sessão termina quando o navegador é fechado.</p></form>`
-      : `<p class="gsub">Crie a sua conta. O acesso aos dados é liberado depois da aprovação do escritório.</p>
-        <form class="gfields" id="mlForm" novalidate>
+        <button class="gbtn" type="submit">Entrar ${ic.arrow}</button></form>`
+      : `<form class="gfields" id="mlForm" novalidate>
         <label class="gf"><span>Nome completo</span><input name="nome" autocomplete="name" required></label>
-        <label class="gf"><span>E-mail</span><input name="email" type="email" autocomplete="email" required></label>
-        <label class="gf"><span>Senha (mínimo 8 caracteres)</span><input name="senha" type="password" autocomplete="new-password" minlength="8" required></label>
+        <label class="gf"><span>E-mail</span><span class="gin">${ic.mail}<input name="email" type="email" autocomplete="email" placeholder="seu.nome@escritorio.adv.br" required></span></label>
+        <div class="gf"><div class="glrow"><label for="mlSenha">Senha (mínimo 8 caracteres)</label></div>${senha('senha', 'new-password', 'minlength="8"')}</div>
         <div class="grow"><label class="gf"><span>OAB</span><input name="oab" inputmode="numeric" placeholder="Número"></label><label class="gf guf"><span>UF</span><select name="uf">${ufs.map(u => `<option ${u === 'AL' ? 'selected' : ''}>${u}</option>`).join('')}</select></label></div>
         <label class="gf"><span>Celular ou WhatsApp</span><input name="telefone" inputmode="tel" autocomplete="tel" placeholder="(82) 90000-0000"></label>
         <p class="gerr" id="mlErr" role="alert"></p>
-        <button class="gbtn" type="submit">Criar conta e pedir acesso</button></form>`}
+        <button class="gbtn" type="submit">Criar conta e pedir acesso ${ic.arrow}</button></form>`}
       <div class="gou"><span>ou</span></div>
-      <button class="gbtn ghost ggoogle" type="button" data-ml="google"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.7V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>Continuar com Google</button>`; },
+      <button class="gbtn ghost ggoogle" type="button" data-ml="google"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.2-2.1 3.5-5.1 3.5-8.7z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9h-4v3.1A12 12 0 0 0 12 24z"/><path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.7V6.6h-4a12 12 0 0 0 0 10.8z"/><path fill="#EA4335" d="M12 4.8c1.7 0 3.3.6 4.5 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/></svg>Continuar com Google</button>
+      <p class="gsess">${ic.shield}A sessão termina quando o navegador é fechado.</p>`; },
     wire(){ const box = document.querySelector('#gate .gform'); if (!box) return;
       box.querySelectorAll('[data-ml]').forEach(b => b.addEventListener('click', async () => { const k = b.dataset.ml;
         if (k === 'entrar' || k === 'criar') { aba = k; window.melLogin.rerender(); return; }
+        if (k === 'olho') { const inp = b.parentNode.querySelector('input'); const ver = inp.type === 'password'; inp.type = ver ? 'text' : 'password'; b.setAttribute('aria-pressed', String(ver)); b.setAttribute('aria-label', ver ? 'Ocultar senha' : 'Mostrar senha'); return; }
         const err = document.getElementById('mlErr');
         if (k === 'google') { try { await persistir; await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); marcarEntrada(); location.reload(); } catch (e) { if (err) err.textContent = msgErro(e); } return; }
         if (k === 'reset') { const em = box.querySelector('input[name=email]').value.trim(); if (!em) { err.textContent = 'Digite o seu e-mail acima e toque de novo em "Esqueci minha senha".'; return; }
