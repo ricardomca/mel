@@ -873,6 +873,14 @@ body.gated{background:#0F141E}
  .pal{top:0;left:0;transform:none;width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;padding-top:env(safe-area-inset-top,0px);animation:palIn .15s ease}
  .pft{display:none} .palx kbd{display:none} .palf{display:inline}
 }
+
+/* abas da Visão geral (Operação / Negócio) */
+.vtabs{display:flex;gap:30px;border-bottom:1px solid var(--line);margin:-4px 0 2px;overflow-x:auto;scrollbar-width:none}
+.vtabs::-webkit-scrollbar{display:none}
+.vtabs button{border:0;background:none;padding:10px 2px 12px;font:inherit;font-size:15px;font-weight:700;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s}
+.vtabs button:hover{color:var(--ink)}
+.vtabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.vtabs button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 </style>
 
 <div class="shell">
@@ -1387,9 +1395,9 @@ function vIndicadores(){
  const respOpts=`<select id="ipResp" aria-label="Responsável" class="sel">${opt('','Todo o escritório',resp)}${team.map(id=>opt(id,who(id).name,resp)).join('')}</select>`;
  const taxa=pct(c.noprazo,c.encerr);
  if(vazio())return head('Visão geral','')+welcomeHtml();
- const abas=S.isAdmin?`<div class="seg" role="tablist">${[['op','Operação'],['neg','Negócio']].map(([k,l])=>`<button role="tab" data-act="vg-aba" data-v="${k}" aria-selected="${S.vg===k}">${l}</button>`).join('')}</div>`:'';
- if(S.isAdmin&&S.vg==='neg')return head('Visão geral','Saúde financeira do escritório: receita, caixa, inadimplência e concentração de clientes.',abas)+vNegocio();
- return head('Visão geral','Situação do escritório: prazos, publicações e tarefas.',abas)+`
+ const abas=S.isAdmin?`<div class="vtabs" role="tablist" aria-label="Visão geral">${[['op','Operação'],['neg','Negócio']].map(([k,l])=>`<button role="tab" data-act="vg-aba" data-v="${k}" aria-selected="${S.vg===k}">${l}</button>`).join('')}</div>`:'';
+ if(S.isAdmin&&S.vg==='neg')return head('Visão geral','Saúde financeira do escritório: receita, caixa, inadimplência e concentração de clientes.')+abas+vNegocio();
+ return head('Visão geral','Situação do escritório: prazos, publicações e tarefas.')+abas+`
  <div class="ipbar"><div class="chips">${PER.map(([k,l])=>`<button class="chip" data-act="ip-per" data-v="${k}" aria-pressed="${S.ip.per===k}">${l}</button>`).join('')}</div>
   <div class="ipnav"><button class="iconbtn sq" data-act="ip-off" data-d="-1" aria-label="Período anterior">${I.left}</button><b class="iplabel">${esc(P.label)}</b><button class="iconbtn sq" data-act="ip-off" data-d="1" aria-label="Próximo período">${I.right}</button>${S.ip.off?`<button class="btn ghost" data-act="ip-hoje" style="padding:4px 8px">Voltar para o atual</button>`:''}</div>
   ${respOpts}</div>
