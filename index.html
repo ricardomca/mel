@@ -825,6 +825,54 @@ body.gated{background:#0F141E}
 .side .beta,.appbar .beta,.gbrand .beta{color:var(--accent);background:linear-gradient(180deg,rgba(242,183,5,.16),rgba(242,183,5,.05));border-color:rgba(242,183,5,.42);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
 .gbrand .beta{margin-top:6px;font-size:10px;padding:4px 8px 4px 9px}
 @media (max-width:360px){.appbar .beta{display:none}}
+
+/* ===== topo: lupa, + e perfil; busca em paleta ===== */
+.appbar-r{margin-left:auto;display:flex;align-items:center;gap:10px;position:relative}
+.cbtn{display:grid;place-items:center;width:42px;height:42px;padding:0;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;box-shadow:0 1px 2px rgba(16,24,40,.05);transition:background .15s,transform .15s,box-shadow .15s}
+.cbtn:hover{background:var(--sunk)} .cbtn:active{transform:translateY(1px)}
+.cbtn svg{width:19px;height:19px}
+.cbtn.add{background:linear-gradient(180deg,#FFC51A,#F2B705);border-color:transparent;color:#1C1710;box-shadow:0 6px 16px -6px rgba(242,183,5,.7)}
+.cbtn.add:hover{filter:brightness(1.05)}
+.cbtn.av{border-radius:50%;border:0;background:#1E2433;color:#F2B705;font:700 15px/1 "Plus Jakarta Sans",var(--f-body);box-shadow:none}
+.cbtn.av:hover{background:#2A3245}
+.appbar-r .addmenu{top:calc(100% + 8px);border-radius:14px;padding:6px}
+@media (min-width:900px){
+ .col{position:relative}
+ .appbar{position:absolute!important;top:22px;right:max(28px,env(safe-area-inset-right,0px));left:auto;height:auto!important;padding:0!important;background:none!important;box-shadow:none!important;border:0!important;z-index:25}
+ .appbar .brand{display:none!important}
+ .main{padding-top:24px!important}
+ .viewhead{padding-right:170px}
+ #banners:not(:empty){margin-right:170px}
+}
+@media (max-width:899px){
+ .appbar .cbtn{width:40px;height:40px;background:rgba(255,255,255,.08);border-color:transparent;color:#fff;box-shadow:none}
+ .appbar .cbtn.add{background:linear-gradient(180deg,#FFC51A,#F2B705);color:#1C1710}
+ .appbar .cbtn.av{width:36px;height:36px;background:#F2B705;color:#1C1710}
+ .appbar-r{gap:8px}
+}
+.palbg{position:fixed;inset:0;z-index:90;background:rgba(15,20,30,.38);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:palIn .15s ease}
+.pal{position:fixed;left:50%;top:12vh;transform:translateX(-50%);width:min(640px,calc(100vw - 32px));max-height:76vh;display:flex;flex-direction:column;background:var(--surface);border-radius:20px;box-shadow:0 30px 80px -20px rgba(16,24,40,.45);z-index:91;overflow:hidden;animation:palUp .18s cubic-bezier(.3,.75,.25,1)}
+@keyframes palIn{from{opacity:0}} @keyframes palUp{from{opacity:0;transform:translate(-50%,8px)}}
+.pal .pin{display:flex;align-items:center;gap:12px;padding:16px 18px 16px 20px;border-bottom:1px solid var(--line)}
+.pal .pin>span>svg,.pal .pin>svg{width:21px;height:21px;color:#9A6B00;display:block}
+.pal .pin input{flex:1;min-width:0;border:0;outline:none;background:none;font:inherit;font-size:17px;color:var(--ink);padding:4px 0}
+.pal .pin input::-webkit-search-cancel-button{display:none}
+.palx{border:0;background:none;padding:0;cursor:pointer;flex:none} .palf{display:none;font:600 15px/1 var(--f-body);color:#9A6B00}
+.pal kbd{display:inline-block;font:600 11.5px/1 system-ui,sans-serif;color:var(--muted);background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:4px 7px}
+.pres{overflow:auto;padding:4px 0 8px}
+.pres h6{margin:0;padding:12px 20px 6px;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pit{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;padding:9px 20px;text-align:left;font:inherit;font-size:15px;color:var(--ink);cursor:pointer}
+.pit i{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--sunk);color:var(--muted);flex:none;font-style:normal}
+.pit i svg{width:17px;height:17px}
+.pit .pl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pit small{margin-left:auto;color:var(--muted);font-size:12.5px;flex:none}
+.pit.on{background:#FFF8E1} .pit.on i{background:#FFEDB3;color:#8A6500}
+.pvazio{margin:0;padding:22px 20px;color:var(--muted);font-size:14.5px}
+.pft{display:flex;gap:16px;flex-wrap:wrap;padding:11px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);background:var(--sunk)}
+@media (max-width:899px){
+ .pal{top:0;left:0;transform:none;width:100%;max-height:none;height:100vh;height:100dvh;border-radius:0;padding-top:env(safe-area-inset-top,0px);animation:palIn .15s ease}
+ .pft{display:none} .palx kbd{display:none} .palf{display:inline}
+}
 </style>
 
 <div class="shell">
@@ -832,11 +880,11 @@ body.gated{background:#0F141E}
   <div class="col">
 <header class="appbar" id="appbar">
   <a class="brand" href="#visao" aria-label="Mel, ir para a Visão geral"><svg class="msym" viewBox="0 0 64 64" aria-hidden="true"><polygon points="32.00,5.50 54.95,18.75 54.95,45.25 32.00,58.50 9.05,45.25 9.05,18.75" fill="#F2B705" stroke="#F2B705" stroke-width="7" stroke-linejoin="round"/><g fill="none" stroke="#1C1A17" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M27.3 26.8C25.4 20.8 20 17 16.4 19.3S15.6 28.6 23.1 31.7"/><path d="M36.7 26.8C38.6 20.8 44 17 47.6 19.3S48.4 28.6 40.9 31.7"/><rect x="22.5" y="25.5" width="19" height="20.5" rx="9.5"/><path d="M23.2 32.6h17.6M23.2 38.8h17.6"/></g></svg><b><span>M</span><span class="y">e</span><span>l</span><em class="beta" title="Versão inicial, em testes">Beta</em></b></a>
-  <div class="gsearch" role="search"><input id="gq" type="search" placeholder="Pesquisar processo, publicação ou tarefa" autocomplete="off" aria-label="Pesquisar no sistema"><span id="gqIcon"></span><div class="gres" id="gres" hidden></div></div>
   <div class="appbar-r">
-    <button class="iconbtn" id="btnAdd" aria-label="Adicionar" title="Adicionar" aria-expanded="false"></button>
+    <button class="cbtn" id="btnBusca" aria-label="Buscar (Ctrl K)" title="Buscar (Ctrl K)"></button>
+    <button class="cbtn add" id="btnAdd" aria-label="Adicionar" title="Adicionar" aria-expanded="false"></button>
     <div class="addmenu" id="addMenu" hidden></div>
-    <button class="userbtn" id="btnUser" title="Equipe e ajustes"><span class="ui" id="userIc"></span><span class="nm" id="userNm">Você</span><span class="car">▾</span></button>
+    <button class="cbtn av" id="btnUser" title="Equipe e ajustes" aria-label="Equipe e ajustes"><span id="userAv">·</span></button>
   </div>
 </header>
   <main class="main" id="main">
@@ -844,6 +892,12 @@ body.gated{background:#0F141E}
     <div id="view"><p class="muted">Carregando processos, prazos e agenda do escritório…</p></div>
   </main>
   </div>
+</div>
+<div class="palbg" id="palBg" hidden></div>
+<div class="pal" id="pal" role="dialog" aria-modal="true" aria-label="Buscar" hidden>
+  <div class="pin"><span id="palIc"></span><input id="gq" type="search" placeholder="Buscar processo, cliente, prazo…" autocomplete="off" aria-label="Buscar no sistema" aria-controls="gres"><button class="palx" id="palX" aria-label="Fechar busca"><kbd>Esc</kbd><span class="palf">Fechar</span></button></div>
+  <div class="pres" id="gres" role="listbox"></div>
+  <div class="pft"><span><kbd>↑</kbd> <kbd>↓</kbd> navegar</span><span><kbd>Enter</kbd> abrir</span><span class="pk"><kbd>Ctrl</kbd> <kbd>K</kbd> abre a busca de qualquer tela</span></div>
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Seções"></nav>
 <div id="sheetRoot"></div>
@@ -1188,7 +1242,7 @@ function acessosHtml(){if(!S.isAdmin)return'';const pend=(S.pedidos||[]).filter(
 function draw(){
  if(S.gate!=='ok'){renderGate();return}
  {const g=$('#gate');if(g){g.remove();document.body.classList.remove('gated')}}
- $('#side').innerHTML=navHtml(true);if(window.melSide)window.melSide.medir();$('#tabbar').innerHTML=navHtml(false);{const u=$('#userNm');if(u)u.textContent=S.meId?(who(S.meId).name==='Você'?'Você':who(S.meId).name.split(' ')[0]):'Você'}
+ $('#side').innerHTML=navHtml(true);if(window.melSide)window.melSide.medir();$('#tabbar').innerHTML=navHtml(false);{const u=$('#userAv');if(u){const n=S.meId?who(S.meId).name:'';u.textContent=(n&&n!=='Você'?n.trim()[0]:'·').toUpperCase()}}
  const b=[];
  if(S.offline)b.push(['warn','Os dados do escritório ficam disponíveis quando você abre esta página no Claude, conectado à sua conta.']);
  else if(S.err)b.push(['warn','Não foi possível carregar os dados. Recarregue a página para tentar de novo.']);
@@ -2280,7 +2334,7 @@ async function removerExemplos(btn){if(!btn.classList.contains('armed')){btn.cla
  for(const [d,c] of Object.entries(S.confs||{}))if(c&&c.exemplo)await remove('conferencias',d);toast('Exemplos removidos');closeSheet()}
 
 /* ---------- eventos de interface ---------- */
-document.addEventListener('click',async e=>{const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,id=el.dataset.id;if(el.closest('#addMenu')){$('#addMenu').hidden=true}if(el.closest('#gres')){$('#gres').hidden=true;$('#gq').value=''}
+document.addEventListener('click',async e=>{const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,id=el.dataset.id;if(el.closest('#addMenu')){$('#addMenu').hidden=true}if(el.closest('#pal')){fecharBusca();if(a==='pal-ir'){location.hash='#'+id;return}}
  if(a==='close-overlay'&&e.target!==el)return;
  switch(a){
   case'close':case'close-overlay':closeSheet();break;
@@ -2390,11 +2444,11 @@ document.addEventListener('click',async e=>{const el=e.target.closest('[data-act
    if(!c.value)setC();else if(!k.value)k.value=el.dataset.v;else setC();break}
  }});
 $('#btnUser').addEventListener('click',openEquipe);
-$('#gqIcon').outerHTML=I.search;$('#userIc').innerHTML=I.users;$('#btnAdd').innerHTML=I.plus;
+$('#btnBusca').innerHTML=I.search;$('#palIc').innerHTML=I.search;$('#btnAdd').innerHTML=I.plus;
 $('#addMenu').innerHTML=[['calc-open','calc','Calculadora de prazos'],['go-modelos','modelos','Gerar documento'],['new-processo','processos','Processo'],['new-prazo','prazos','Prazo'],['new-evento','agenda','Compromisso'],['new-tarefa','tarefas','Tarefa'],['pub-manual','publicacoes','Importar publicação'],['new-contrato','honorarios','Contrato de honorários']].map(([a,i,l])=>`<button data-act="${a}">${I[i]}${l}</button>`).join('');
 const addMenu=$('#addMenu'),btnAdd=$('#btnAdd');
 btnAdd.addEventListener('click',e=>{e.stopPropagation();addMenu.hidden=!addMenu.hidden;btnAdd.setAttribute('aria-expanded',String(!addMenu.hidden))});
-document.addEventListener('click',e=>{if(!addMenu.hidden&&!e.target.closest('#addMenu'))addMenu.hidden=true;if(!e.target.closest('.gsearch'))$('#gres').hidden=true},true);
+document.addEventListener('click',e=>{if(!addMenu.hidden&&!e.target.closest('#addMenu'))addMenu.hidden=true},true);
 function gsearch(q){q=q.trim().toLowerCase();const qd=dig(q);const out=[];if(q.length<2)return out;
  const has=(...v)=>v.join(' ').toLowerCase().includes(q)||(qd.length>=4&&v.some(x=>dig(x).includes(qd)));
  for(const p of S.processos)if(has(p.cliente,p.contraria,p.classe,p.numero,p.orgao))out.push(['Processo',`${p.cliente||p.classe||'Processo'}${p.numero?' · '+p.numero:''}`,'open-processo',p.id]);
@@ -2403,9 +2457,25 @@ function gsearch(q){q=q.trim().toLowerCase();const qd=dig(q);const out=[];if(q.l
  for(const e of S.eventos)if(has(e.titulo,e.local))out.push(['Agenda',`${e.titulo||e.tipo} · ${fmtD(e.data)}`,'edit-evento',e.id]);
  for(const p of S.pubs)if(has(p.numero,p.orgao,p.tribunal,(p.destinatarios||[]).map(d=>d.nome).join(' ')))out.push(['Publicação',`${p.tipo||'Comunicação'} · ${p.numero||p.tribunal||''}`,'gs-pub',p.id,p.numero||'']);
  return out.slice(0,10)}
-$('#gq').addEventListener('input',e=>{const r=gsearch(e.target.value),box=$('#gres');if(e.target.value.trim().length<2){box.hidden=true;return}
- box.innerHTML=r.length?r.map(([t,l,a,id,num])=>`<button data-act="${a}" data-id="${esc(id)}" data-num="${esc(num||'')}"><span class="gt">${t}</span><span class="gl">${esc(l)}</span></button>`).join(''):'<div class="empty">Nada encontrado.</div>';box.hidden=false});
-$('#gq').addEventListener('keydown',e=>{if(e.key==='Escape'){$('#gres').hidden=true;e.target.blur()}if(e.key==='Enter'){const f=$('#gres button');if(f)f.click()}});
+const GS_IC={Processo:'processos',Prazo:'prazos',Tarefa:'tarefas',Agenda:'agenda','Publicação':'publicacoes'};
+function palItem(act,id,ic,txt,dir,extra){return`<button class="pit" role="option" data-act="${act}" data-id="${esc(id||'')}" ${extra||''}><i>${I[ic]||''}</i><span class="pl">${txt}</span>${dir?`<small>${dir}</small>`:''}</button>`}
+function palRender(){const q=$('#gq').value,box=$('#gres');let h='';
+ if(q.trim().length<2){const np=S.pubs.filter(p=>p.status!=='tratada').length;
+  h='<h6>Ações rápidas</h6>'+palItem('new-prazo','','prazos','Novo prazo')+palItem('new-processo','','processos','Novo processo')+palItem('new-evento','','agenda','Novo compromisso')+palItem('pal-ir','publicacoes','publicacoes','Ir para Publicações',np?np+' para tratar':'')+palItem('calc-open','','calc','Calculadora de prazos')}
+ else{const r=gsearch(q);h=r.length?'<h6>Resultados</h6>'+r.map(([t,l,a,id,num])=>palItem(a,id,GS_IC[t]||'search',esc(l),t,`data-num="${esc(num||'')}"`)).join(''):'<p class="pvazio">Nada encontrado para “'+esc(q.trim())+'”.</p>'}
+ box.innerHTML=h;const f=box.querySelector('.pit');if(f)f.classList.add('on')}
+function abrirBusca(){if(S.gate&&S.gate!=='ok')return;addMenu.hidden=true;$('#pal').hidden=false;$('#palBg').hidden=false;document.body.classList.add('palopen');$('#gq').value='';palRender();setTimeout(()=>$('#gq').focus(),20)}
+function fecharBusca(){if($('#pal').hidden)return;$('#pal').hidden=true;$('#palBg').hidden=true;document.body.classList.remove('palopen');$('#gq').blur()}
+$('#btnBusca').addEventListener('click',e=>{e.stopPropagation();abrirBusca()});
+$('#palBg').addEventListener('click',fecharBusca);$('#palX').addEventListener('click',fecharBusca);
+$('#gq').addEventListener('input',palRender);
+$('#gres').addEventListener('mousemove',e=>{const b=e.target.closest('.pit');if(b&&!b.classList.contains('on')){document.querySelectorAll('#gres .pit.on').forEach(x=>x.classList.remove('on'));b.classList.add('on')}});
+$('#gq').addEventListener('keydown',e=>{const its=[...document.querySelectorAll('#gres .pit')];let i=its.findIndex(x=>x.classList.contains('on'));
+ if(e.key==='Escape'){e.preventDefault();fecharBusca();return}
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(!its.length)return;if(i>=0)its[i].classList.remove('on');i=e.key==='ArrowDown'?(i+1)%its.length:(i-1+its.length)%its.length;its[i].classList.add('on');its[i].scrollIntoView({block:'nearest'});return}
+ if(e.key==='Enter'){e.preventDefault();if(i>=0)its[i].click()}});
+document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&(e.key==='k'||e.key==='K')){e.preventDefault();$('#pal').hidden?abrirBusca():fecharBusca();return}
+ if(e.key==='/'&&!e.metaKey&&!e.ctrlKey&&$('#pal').hidden&&!S.sheet){const t=e.target;if(!(t.closest&&t.closest('input,textarea,select,[contenteditable="true"]'))){e.preventDefault();abrirBusca()}}});
 document.addEventListener('change',e=>{if(e.target.id==='ipResp'){S.ip={...S.ip,resp:e.target.value};schedule()}});
 document.addEventListener('input',e=>{if(e.target.id==='q'){S.q=e.target.value;schedule()}if(e.target.id==='pq'){S.pq=e.target.value;S.pubLim=50;schedule()}if(e.target.id==='hq'){S.hon.q=e.target.value;schedule()}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&S.sheet)closeSheet()});
