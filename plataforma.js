@@ -9,40 +9,18 @@
   firebase.initializeApp(cfg);
   const auth = firebase.auth(); auth.languageCode = 'pt';
   const fs = firebase.firestore();
-  /* ---------- sessão: acaba ao fechar o navegador e após 30 minutos sem uso ---------- */
-  const INATIVO_MIN = 30, AVISO_SEG = 60;
+  /* ---------- sessão: acaba quando o navegador é fechado ---------- */
   const ss = { get: k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } },
                set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} },
                del: k => { try { sessionStorage.removeItem(k); } catch (e) {} } };
   const PERS = firebase.auth.Auth && firebase.auth.Auth.Persistence;
   const persistir = (PERS && auth.setPersistence) ? auth.setPersistence(PERS.SESSION).catch(() => {}) : Promise.resolve();
   const motivoSaida = ss.get('mel-saiu'); ss.del('mel-saiu');
-  const marcarEntrada = () => { ss.set('mel-sessao', '1'); ss.set('mel-ult', String(Date.now())); };
-  async function sairPor(motivo){ ss.set('mel-saiu', motivo); ss.del('mel-sessao'); ss.del('mel-ult'); try { await auth.signOut(); } catch (e) {} location.reload(); }
-  let ult = Date.now(), gravado = 0, aviso = null;
-  function atividade(){ ult = Date.now(); if (ult - gravado > 5000) { gravado = ult; ss.set('mel-ult', String(ult)); } if (aviso) esconderAviso(); }
-  function mostrarAviso(seg){
-    if (!aviso) { aviso = document.createElement('div'); aviso.id = 'melAviso'; aviso.setAttribute('role', 'alertdialog'); aviso.setAttribute('aria-live', 'assertive');
-      aviso.style.cssText = 'position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:9999;display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 32px);padding:12px 12px 12px 18px;border-radius:16px;background:#1E2433;color:#fff;font:500 14px/1.35 system-ui,-apple-system,sans-serif;box-shadow:0 12px 40px rgba(16,24,40,.28)';
-      aviso.innerHTML = '<span>Por segurança, a Mel vai sair em <b id="melAvisoSeg"></b> s por falta de uso.</span><button type="button" style="border:0;border-radius:10px;padding:9px 14px;background:#F2B705;color:#1C1710;font:600 14px/1 system-ui,-apple-system,sans-serif;cursor:pointer">Continuar conectado</button>';
-      aviso.querySelector('button').addEventListener('click', atividade); document.body.appendChild(aviso); }
-    aviso.querySelector('#melAvisoSeg').textContent = String(Math.max(0, seg)); }
-  function esconderAviso(){ if (aviso) { aviso.remove(); aviso = null; } }
-  function vigiar(){ const lim = INATIVO_MIN * 60000;
-    const checar = () => { const parado = Date.now() - Math.max(ult, +ss.get('mel-ult') || 0);
-      if (parado >= lim) { sairPor('inatividade'); return; }
-      if (parado >= lim - AVISO_SEG * 1000) mostrarAviso(Math.ceil((lim - parado) / 1000)); else esconderAviso(); };
-    ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => document.addEventListener(ev, atividade, { passive: true, capture: true }));
-    let mv = 0; document.addEventListener('mousemove', () => { const t = Date.now(); if (t - mv > 2000) { mv = t; atividade(); } }, { passive: true });
-    document.addEventListener('visibilitychange', () => { if (!document.hidden) checar(); });
-    setInterval(checar, 1000); }
+  const marcarEntrada = () => ss.set('mel-sessao', '1');
+  async function sairPor(motivo){ ss.set('mel-saiu', motivo); ss.del('mel-sessao'); try { await auth.signOut(); } catch (e) {} location.reload(); }
   const pronto = new Promise(r => { const un = auth.onAuthStateChanged(async u => { un(); await persistir;
-    if (u) {
-      // sessão que não foi aberta nesta janela (ex.: login antigo guardado no computador): pede para entrar de novo
-      if (ss.get('mel-sessao') !== '1') { await sairPor('sessao'); return; }
-      const ultSalvo = +ss.get('mel-ult') || 0;
-      if (ultSalvo && Date.now() - ultSalvo >= INATIVO_MIN * 60000) { await sairPor('inatividade'); return; }
-      ult = Date.now(); ss.set('mel-ult', String(ult)); vigiar(); }
+    // sessão que não foi aberta nesta janela (ex.: login antigo guardado no computador): pede para entrar de novo
+    if (u && ss.get('mel-sessao') !== '1') { await sairPor('sessao'); return; }
     r(u); }); });
   let acesso = { membros: {} }, acessoLido = false;
   const ehDono = u => !!u && !!u.email && u.email.toLowerCase() === DONO && u.emailVerified;
@@ -94,11 +72,10 @@
   const msgErro = e => ERROS[e && e.code] || 'Não foi possível concluir agora. Tente de novo.';
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   let aba = 'entrar';
-  window.melSair = async () => { ss.del('mel-sessao'); ss.del('mel-ult'); try { await auth.signOut(); } catch (e) {} location.reload(); };
+  window.melSair = async () => { ss.del('mel-sessao'); try { await auth.signOut(); } catch (e) {} location.reload(); };
   window.melLogin = {
     html(){ const ufs = 'AC AL AP AM BA CE DF ES GO MA MT MS MG PA PB PR PE PI RJ RN RS RO RR SC SE SP TO'.split(' ');
-      const nota = motivoSaida === 'inatividade' ? 'Você saiu automaticamente depois de ' + INATIVO_MIN + ' minutos sem uso. Entre de novo para continuar.'
-        : motivoSaida === 'sessao' ? 'Por segurança, a Mel agora pede o login a cada vez que o navegador é aberto. Entre de novo para continuar.' : '';
+      const nota = motivoSaida === 'sessao' ? 'Por segurança, a Mel agora pede o login a cada vez que o navegador é aberto. Entre de novo para continuar.' : '';
       return `<h2>${aba === 'entrar' ? 'Entrar na Mel' : 'Criar conta'}</h2>
       ${nota && aba === 'entrar' ? `<p class="gnota" role="status" style="margin:0 0 14px;padding:10px 12px;border-radius:12px;background:#FFF6D6;color:#5C4500;font-size:13.5px;line-height:1.4">${esc(nota)}</p>` : ''}
       <div class="gtabs" role="tablist"><button type="button" role="tab" aria-selected="${aba === 'entrar'}" data-ml="entrar">Entrar</button><button type="button" role="tab" aria-selected="${aba === 'criar'}" data-ml="criar">Pedir cadastro</button></div>
@@ -108,7 +85,7 @@
         <p class="gerr" id="mlErr" role="alert"></p>
         <button class="gbtn" type="submit">Entrar</button>
         <button class="glink" type="button" data-ml="reset">Esqueci minha senha</button>
-        <p class="gsub" style="margin:4px 0 0;font-size:12.5px">Por segurança, a sessão termina quando o navegador é fechado ou após ${INATIVO_MIN} minutos sem uso.</p></form>`
+        <p class="gsub" style="margin:4px 0 0;font-size:12.5px">Por segurança, a sessão termina quando o navegador é fechado.</p></form>`
       : `<p class="gsub">Crie a sua conta. O acesso aos dados é liberado depois da aprovação do escritório.</p>
         <form class="gfields" id="mlForm" novalidate>
         <label class="gf"><span>Nome completo</span><input name="nome" autocomplete="name" required></label>
